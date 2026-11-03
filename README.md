@@ -25,7 +25,7 @@ Settings are chosen on the **development set only** using Macro F1. Both methods
 ## Evaluation
 - Spam-associated words: top 20 by smoothed spam/ham log-ratio on **train only**, keeping words with 3+ letters that appear in at least 10 spam and 10 ham training messages (words that never occur in ham cannot cause false alarms).
 - Main comparison: Accuracy and Macro F1 on the unchanged test set.
-- False-positive rate on (a) test ham **with** spam-associated words, (b) test ham **without** them, (c) the hand-written challenge set (`data/challenge_set.csv`).
+- False-positive rate on (a) test ham **with** spam-associated words, (b) test ham **without** them, (c) a challenge set of 60 legitimate messages prepared by the team, 20 per member, with ChatGPT assisting the drafting (`data/challenge_set.csv`).
 - Error analysis: at least three errors per method.
 
 ## Repository layout
@@ -53,4 +53,4 @@ docs/evidence_log.md                    Dated evidence of each member's work
 - N. Reimers, I. Gurevych, "Sentence-BERT," EMNLP-IJCNLP, 2019.
 - M. T. Ribeiro et al., "Beyond accuracy: Behavioral testing of NLP models with CheckList," ACL, 2020.
 - Libraries: scikit-learn, pandas, sentence-transformers. Pretrained weights: `sentence-transformers/all-MiniLM-L6-v2`.
-- AI assistance: Claude (Anthropic) helped draft the code structure and helper functions; the team reviewed, ran and is responsible for all code and results.
+- AI assistance: Claude (Anthropic) assisted with code structure and implementation, and with drafting the report, slides and appendix. ChatGPT (OpenAI) assisted with drafting the challenge-set messages, labelled examples and contribution-documentation templates. Each member was assigned one part of the system (data, Method 1, Method 2) and is responsible for reviewing, validating and explaining that part. The team is responsible for the submitted work.
