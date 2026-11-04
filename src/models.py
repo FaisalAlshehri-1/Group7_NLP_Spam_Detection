@@ -39,11 +39,19 @@ def tune_tfidf(train, dev, c_grid=C_GRID, ngram_grid=NGRAM_GRID):
     for C, ngram in itertools.product(c_grid, ngram_grid):
         model = build_tfidf_model(C, ngram).fit(train["text"], train["label"])
         f1 = f1_score(dev["label"], model.predict(dev["text"]), average="macro")
-        rows.append({"C": C, "ngram_range": str(ngram), "dev_macro_f1": round(f1, 4)})
+        rows.append({"C": C, "ngram_range": str(ngram), "dev_macro_f1": f1})
         if f1 > best_f1:
             best, best_f1 = model, f1
-    table = pd.DataFrame(rows).sort_values("dev_macro_f1", ascending=False)
-    return best, table.reset_index(drop=True)
+    return best, _grid_table(rows)
+
+
+def _grid_table(rows):
+    """Sort settings by the unrounded dev score with a stable sort, so ties keep
+    grid order and row 0 is the setting of the returned (first best) model."""
+    table = pd.DataFrame(rows).sort_values("dev_macro_f1", ascending=False,
+                                           kind="mergesort")
+    table["dev_macro_f1"] = table["dev_macro_f1"].round(4)
+    return table.reset_index(drop=True)
 
 
 def tfidf_top_words(model, text, k=5):
@@ -81,11 +89,10 @@ def tune_embedding(X_train, y_train, X_dev, y_dev, c_grid=C_GRID):
     for C in c_grid:
         clf = build_embedding_classifier(C).fit(X_train, y_train)
         f1 = f1_score(y_dev, clf.predict(X_dev), average="macro")
-        rows.append({"C": C, "dev_macro_f1": round(f1, 4)})
+        rows.append({"C": C, "dev_macro_f1": f1})
         if f1 > best_f1:
             best, best_f1 = clf, f1
-    table = pd.DataFrame(rows).sort_values("dev_macro_f1", ascending=False)
-    return best, table.reset_index(drop=True)
+    return best, _grid_table(rows)
 
 
 class EmbeddingSpamClassifier:

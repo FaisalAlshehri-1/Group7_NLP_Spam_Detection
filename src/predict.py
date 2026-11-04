@@ -27,6 +27,6 @@ def classify(message, models):
     lines = [f'Message: "{text}"']
     for name, model in models.items():
         p_spam = float(model.predict_proba([text])[0][1])
-        label = LABELS[int(p_spam >= 0.5)]
+        label = LABELS[int(p_spam > 0.5)]  # same rule as model.predict
         lines.append(f"  {name:<12} -> {label:<8} (P(spam) = {p_spam:.2f})")
     return "\n".join(lines)
